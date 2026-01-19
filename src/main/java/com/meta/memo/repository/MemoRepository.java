@@ -28,8 +28,8 @@ public class MemoRepository {
         String sql = "INSERT INTO memo (username, contents) VALUES (?, ?)";
         jdbcTemplate.update(con -> {
             PreparedStatement preparedStatement = con.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
-            preparedStatement.setString( 1, newMemo.getUsername());
-            preparedStatement.setString( 2, newMemo.getContents());
+            preparedStatement.setString(1, newMemo.getUsername());
+            preparedStatement.setString(2, newMemo.getContents());
             return preparedStatement;
         }, keyHolder);
 
@@ -44,13 +44,13 @@ public class MemoRepository {
         // DB 조회
         String sql = "SELECT * FROM memo";
 
-        List<MemoResponseDto> memoResponseDtoList= jdbcTemplate.query(sql, new RowMapper<MemoResponseDto>() {
+        List<MemoResponseDto> memoResponseDtoList = jdbcTemplate.query(sql, new RowMapper<MemoResponseDto>() {
             @Override
             public MemoResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
                 Long id = rs.getLong("id");
                 String username = rs.getNString("username");
                 String contents = rs.getNString("contents");
-                return new MemoResponseDto(id, username,contents);
+                return new MemoResponseDto(id, username, contents);
             }
         });
         return memoResponseDtoList;
@@ -61,7 +61,7 @@ public class MemoRepository {
         // DB 조회
         String sql = "SELECT * FROM memo where id = ?";
 
-        return jdbcTemplate.query( sql, resultSet -> {
+        return jdbcTemplate.query(sql, resultSet -> {
             if (resultSet.next()) {
                 Memo memo = new Memo();
                 memo.setUsername(resultSet.getString("username"));
@@ -75,13 +75,13 @@ public class MemoRepository {
 
     public Long update(Long id, MemoRequestDto memoRequestDto) {
         String sql = "UPDATE memo SET username = ?, contents = ? WHERE id = ?";
-        jdbcTemplate.update( sql, memoRequestDto.getUsername(), memoRequestDto.getContents(), id);
+        jdbcTemplate.update(sql, memoRequestDto.getUsername(), memoRequestDto.getContents(), id);
         return id;
     }
 
     public Long delete(Long id) {
         String sql = "DELETE  FROM memo WHERE id = ?";
-        jdbcTemplate.update( sql, id);
+        jdbcTemplate.update(sql, id);
         return null;
     }
 }
