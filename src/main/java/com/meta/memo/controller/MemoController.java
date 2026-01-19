@@ -4,12 +4,15 @@ import com.meta.memo.domain.Memo;
 import com.meta.memo.dto.MemoRequestDto;
 import com.meta.memo.dto.MemoResponseDto;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.swing.plaf.basic.BasicTreeUI;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 @RestController
@@ -48,14 +51,23 @@ public class MemoController {
         return memoResponseDto;
     }
 
-//    @GetMapping()
-//    public List<MemoResponseDto> getMemos() {
-//        // (임시) MAp -> List
-//        List<MemoResponseDto> memoResponseDtoList = memoList.values().stream()
-//                .map(MemoResponseDto::new).toList();
-//        return memoResponseDtoList;
-//    }
-//
+    @GetMapping()
+    public List<MemoResponseDto> getMemos() {
+        // DB 조회
+        String sql = "SELECT * FROM memo";
+
+        List<MemoResponseDto> memoResponseDtoList= jdbcTemplate.query(sql, new RowMapper<MemoResponseDto>() {
+            @Override
+            public MemoResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+                Long id = rs.getLong("id");
+                String username = rs.getNString("username");
+                String contents = rs.getNString("contents");
+                return new MemoResponseDto(id, username,contents);
+            }
+        });
+        return memoResponseDtoList;
+    }
+
 //    @PutMapping("{id}")
 //    public Long updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto memoRequestDto) {
 //        // 해당 id의 메모가 데이터베이스에 존재하는지 확인
