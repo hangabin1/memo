@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 public class MemoService {
-    //JDBC를 통한 MySQL 연결'
-    private final JdbcTemplate jdbcTemplate;
+    // 멤버 변수 선언
+    private final MemoRepository memoRepository;
 
     public MemoService(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+        this.memoRepository = new MemoRepository(jdbcTemplate);
     }
 
 
@@ -23,7 +23,6 @@ public class MemoService {
         // RequestDto -> Entity 변환
         Memo newMemo = new Memo(memoRequestDto);
 
-        MemoRepository memoRepository = new MemoRepository(jdbcTemplate);
         Memo savedMemo = memoRepository.save(newMemo);
 
         // Entity -> ResponseDto 변환
@@ -33,14 +32,11 @@ public class MemoService {
     }
 
     public List<MemoResponseDto> getMemos() {
-        MemoRepository memoRepository = new MemoRepository(jdbcTemplate);
         List<MemoResponseDto> memoResponseDtoList = memoRepository.findAll();
         return memoResponseDtoList;
     }
 
     public Long updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto memoRequestDto) {
-        MemoRepository memoRepository = new MemoRepository(jdbcTemplate);
-
         // 해당 id의 메모가 존재하는지 확인
         Memo foundMemo = memoRepository.findById(id);
 
@@ -54,7 +50,6 @@ public class MemoService {
     }
 
     public Long deleteMemo(@PathVariable Long id) {
-        MemoRepository memoRepository = new MemoRepository(jdbcTemplate);
         // 해당 id의 메모가 존재하는지 확인
         Memo foundMemo = memoRepository.findById(id);
 
