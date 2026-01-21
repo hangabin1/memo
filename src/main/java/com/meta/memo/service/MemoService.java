@@ -5,20 +5,21 @@ import com.meta.memo.dto.MemoRequestDto;
 import com.meta.memo.dto.MemoResponseDto;
 import com.meta.memo.repository.MemoRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@Component
+@Service
 public class MemoService {
     // 멤버 변수 선언
     private final MemoRepository memoRepository;
 
+    // 생성자 주입(DI)
     public MemoService(MemoRepository memoRepository) {
         this.memoRepository = memoRepository;
     }
-
 
     public MemoResponseDto createMemo(@RequestBody MemoRequestDto memoRequestDto) {
         // RequestDto -> Entity 변환
