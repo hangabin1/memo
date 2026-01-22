@@ -375,6 +375,36 @@
                 }
             })
         }
+
+        function getMemosByKeyword() {
+            let keyword = $('#query').val();
+
+            if (keyword == '') {
+                alert('검색어를 입력해주세요');
+                return;
+            }
+
+            $('#cards-box').empty();
+
+            $.ajax({
+                type: 'GET',
+                url: `/api/memos/contents?keyword=${keyword}`,
+                success: function (response) {
+                    if (response.length === 0) {
+                        alert("검색 결과가 없습니다.");
+                        window.location.reload();
+                    }
+                    for (let i = 0; i < response.length; i++) {
+                        let message = response[i];
+                        let id = message['id'];
+                        let username = message['username'];
+                        let contents = message['contents'];
+                        let modifiedAt = message['modifiedAt'];
+                        addHTML(id, username, contents, modifiedAt);
+                    }
+                }
+            })
+        }
     </script>
 </head>
 
@@ -391,6 +421,18 @@
         <p>
             공유하고 싶은 소식을 입력해주세요.
         </p>
+    </div>
+    <div style="width: 538px; margin: 20px auto; display: flex; align-items: center;">
+        <input id="query" type="text" placeholder="검색어 입력"
+               style="flex: 1; padding: 10px; border-radius: 5px; border: 1px solid #ced4da; margin-right: 10px;">
+        <button onclick="getMemosByKeyword()"
+                style="padding: 10px 20px; background-color: blue; color: white; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">
+            Search
+        </button>
+        <button onclick="window.location.reload()"
+                style="padding: 10px 20px; background-color: darkgreen; color: white; border: none; border-radius: 5px; cursor: pointer;">
+            Back to List
+        </button>
     </div>
     <div class="area-write">
         <textarea class="field" placeholder="공유하고 싶은 소식을 입력해주세요" name="contents" id="contents" cols="30"

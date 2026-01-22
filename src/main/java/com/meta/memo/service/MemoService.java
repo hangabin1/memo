@@ -33,7 +33,8 @@ public class MemoService {
     }
 
     public List<MemoResponseDto> getMemos() {
-        List<MemoResponseDto> memoResponseDtoList = memoRepository.findAllByOrderByCreatedAtDesc()
+        List<MemoResponseDto> memoResponseDtoList = memoRepository.
+                findAllByOrderByCreatedAtDesc()
                 .stream().map(MemoResponseDto::new).toList();
         return memoResponseDtoList;
     }
@@ -61,5 +62,11 @@ public class MemoService {
         return id;
     }
 
+    public List<MemoResponseDto> getMemosByKeyword(String keyword){
+        List<MemoResponseDto> memoResponseDtoList = memoRepository
+                .findAllByContentsContainingOrderByModifiedAtDesc(keyword)
+                .stream().map(MemoResponseDto::new).toList();
+        return memoResponseDtoList;
+    }
 }
 
